@@ -28,7 +28,7 @@ namespace CollectionBenchmarkWebApi.Controllers
             });
         }
 
-        [HttpPost("add")]
+        [HttpPost("addcollection")]
         public IActionResult AddCollection([FromQuery] string type)
         {
             //если коллекция такого типа существует и она ещё не добавлена 
@@ -64,6 +64,15 @@ namespace CollectionBenchmarkWebApi.Controllers
                 _collesctionsService.ElementsCount = count;
                 return Ok(new {message = $"Теперь сравнение происходит по {count} элементам"});
             }
-        } 
+        }
+
+        [HttpGet("selectedtypes")]
+        public IActionResult GetSelectedTypes()
+        {
+            return Ok(new
+            {
+                Types = _collesctionsService.Types
+            });
+        }
     }
 }
