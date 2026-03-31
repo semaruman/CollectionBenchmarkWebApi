@@ -51,9 +51,9 @@ namespace CollectionBenchmarkWebApi.Controllers
         [HttpPost("count")]
         public IActionResult AddElementsCount([FromQuery] int count)
         {
-            if (count > 100000)
+            if (count > 10000000)
             {
-                return BadRequest(new {Error = "Значение не должно превышать 100000"});
+                return BadRequest(new {Error = "Значение не должно превышать 10000000"});
             }
             else if (count  < 0)
             {
@@ -73,6 +73,46 @@ namespace CollectionBenchmarkWebApi.Controllers
             {
                 Types = _collesctionsService.Types
             });
+        }
+
+        [HttpGet("add")]
+        public IActionResult AddBenchmarkTest()
+        {
+            if (_collesctionsService.Types.Count == 0)
+            {
+                return BadRequest(new {Error = "Коллекии не добавлены"});
+            }
+            else if (_collesctionsService.ElementsCount == 0)
+            {
+                return BadRequest(new { Error = "Укажите количество элементов" });
+            }
+
+            Dictionary<string, double> results = new Dictionary<string, double>();
+            foreach (string type in _collesctionsService.Types)
+            {
+                if (type == _acceptableTypes[0])
+                {
+                    double seconds = BenchmarkService.GetAddTime(new List<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[1])
+                {
+                    double seconds = BenchmarkService.GetAddTime(new HashSet<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[2])
+                {
+                    double seconds = BenchmarkService.GetAddTime(new LinkedList<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[3])
+                {
+                    double seconds = BenchmarkService.GetAddTime(new SortedSet<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+            }
+
+            return Ok(results);
         }
     }
 }
