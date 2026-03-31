@@ -7,7 +7,7 @@ builder.Services.AddSingleton<ICollesctionsService, CollectionsService>();
 
 var app = builder.Build();
 app.MapControllers();
-app.MapGet("/", () => GetMenu);
+app.MapGet("/", GetMenu);
 
 app.Run();
 
