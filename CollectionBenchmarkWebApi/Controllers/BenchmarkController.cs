@@ -51,11 +51,13 @@ namespace CollectionBenchmarkWebApi.Controllers
         [HttpPost("count")]
         public IActionResult AddElementsCount([FromQuery] int count)
         {
+            /*
             if (count > 10000000)
             {
                 return BadRequest(new {Error = "Значение не должно превышать 10000000"});
             }
-            else if (count  < 0)
+            */
+            if (count  < 0)
             {
                 return BadRequest(new { Error = "Значение не должно быть отрицательным" });
             }

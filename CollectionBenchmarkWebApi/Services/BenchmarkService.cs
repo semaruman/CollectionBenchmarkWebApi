@@ -12,7 +12,7 @@ namespace CollectionBenchmarkWebApi.Services
             stopwatch.Start();
             for (int i = 0; i< elemCount; i++)
             {
-                collection.Add(rnd.Next());
+                collection.Add(i);
             }
             stopwatch.Stop();
             return stopwatch.Elapsed.TotalSeconds;
