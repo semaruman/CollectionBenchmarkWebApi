@@ -47,5 +47,23 @@ namespace CollectionBenchmarkWebApi.Controllers
             }
 
         }
+
+        [HttpPost("count")]
+        public IActionResult AddElementsCount([FromQuery] int count)
+        {
+            if (count > 100000)
+            {
+                return BadRequest(new {Error = "Значение не должно превышать 100000"});
+            }
+            else if (count  < 0)
+            {
+                return BadRequest(new { Error = "Значение не должно быть отрицательным" });
+            }
+            else
+            {
+                _collesctionsService.ElementsCount = count;
+                return Ok(new {message = $"Теперь сравнение происходит по {count} элементам"});
+            }
+        } 
     }
 }
