@@ -116,5 +116,85 @@ namespace CollectionBenchmarkWebApi.Controllers
 
             return Ok(results);
         }
+
+        [HttpGet("search")]
+        public IActionResult SearchBenchmarkTest()
+        {
+            if (_collesctionsService.Types.Count == 0)
+            {
+                return BadRequest(new { Error = "Коллекии не добавлены" });
+            }
+            else if (_collesctionsService.ElementsCount == 0)
+            {
+                return BadRequest(new { Error = "Укажите количество элементов" });
+            }
+
+            Dictionary<string, double> results = new Dictionary<string, double>();
+            foreach (string type in _collesctionsService.Types)
+            {
+                if (type == _acceptableTypes[0])
+                {
+                    double seconds = BenchmarkService.GetSearchTime(new List<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[1])
+                {
+                    double seconds = BenchmarkService.GetSearchTime(new HashSet<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[2])
+                {
+                    double seconds = BenchmarkService.GetSearchTime(new LinkedList<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[3])
+                {
+                    double seconds = BenchmarkService.GetSearchTime(new SortedSet<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+            }
+
+            return Ok(results);
+        }
+
+        [HttpGet("memory")]
+        public IActionResult MemoryBenchmarkTest()
+        {
+            if (_collesctionsService.Types.Count == 0)
+            {
+                return BadRequest(new { Error = "Коллекии не добавлены" });
+            }
+            else if (_collesctionsService.ElementsCount == 0)
+            {
+                return BadRequest(new { Error = "Укажите количество элементов" });
+            }
+
+            Dictionary<string, double> results = new Dictionary<string, double>();
+            foreach (string type in _collesctionsService.Types)
+            {
+                if (type == _acceptableTypes[0])
+                {
+                    double seconds = BenchmarkService.GetCollectionMemory(new List<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[1])
+                {
+                    double seconds = BenchmarkService.GetCollectionMemory(new HashSet<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[2])
+                {
+                    double seconds = BenchmarkService.GetCollectionMemory(new LinkedList<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[3])
+                {
+                    double seconds = BenchmarkService.GetCollectionMemory(new SortedSet<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+            }
+
+            return Ok(results);
+        }
     }
 }
