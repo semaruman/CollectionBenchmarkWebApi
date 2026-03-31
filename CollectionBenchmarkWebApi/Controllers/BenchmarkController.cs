@@ -11,7 +11,7 @@ namespace CollectionBenchmarkWebApi.Controllers
 
         private readonly string[] _acceptableTypes = new string[]
         {
-            "List", "Dictionary", "HashSet", "LinkedList", "SortedSet"
+            "List", "HashSet", "LinkedList", "SortedSet"
         };
 
         public BenchmarkController(ICollesctionsService collesctionsService)
