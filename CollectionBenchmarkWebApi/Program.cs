@@ -18,7 +18,7 @@ IResult GetMenu()
         Endpoints = new[]
         {
             "GET: api/benchmark/types - получить коллекции, которые можно добавить в сравнение",
-            "POST: api/benchmark/addcollection - добавить коллекцию в сравнение",
+            "POST: api/benchmark/addcollection?type={тип коллекции} - добавить коллекцию в сравнение",
             "POST: api/benchmark/count?count={число элементов} - количество элементов в каждой коллекции",
             "GET: api/benchmark/selectedtypes - получить коллекции, которые уже добавлены в сравнение",
             "GET: api/benchmark/add - сравнить выбранные коллекции по добавлению элементов",
