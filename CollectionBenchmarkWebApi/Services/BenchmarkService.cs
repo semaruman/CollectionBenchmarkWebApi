@@ -55,5 +55,25 @@ namespace CollectionBenchmarkWebApi.Services
 
             return (memoryAfter - memoryBefore)/1024.0/1024.0;
         }
+
+        public static double GetRemoveTime(ICollection<int> collection, int elemCount)
+        {
+            var stopwatch = new Stopwatch();
+            var rnd = new Random();
+
+            //добавление элементов
+            for (int i = 0; i < elemCount; i++)
+            {
+                collection.Add(i);
+            }
+
+            int findElem = rnd.Next(elemCount);
+
+            stopwatch.Start();
+            collection.Remove(findElem);
+            stopwatch.Stop();
+
+            return stopwatch.Elapsed.TotalSeconds;
+        }
     }
 }

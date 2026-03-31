@@ -196,5 +196,45 @@ namespace CollectionBenchmarkWebApi.Controllers
 
             return Ok(results);
         }
+
+        [HttpGet("remove")]
+        public IActionResult RemoveBenchmarkTest()
+        {
+            if (_collesctionsService.Types.Count == 0)
+            {
+                return BadRequest(new { Error = "Коллекии не добавлены" });
+            }
+            else if (_collesctionsService.ElementsCount == 0)
+            {
+                return BadRequest(new { Error = "Укажите количество элементов" });
+            }
+
+            Dictionary<string, double> results = new Dictionary<string, double>();
+            foreach (string type in _collesctionsService.Types)
+            {
+                if (type == _acceptableTypes[0])
+                {
+                    double seconds = BenchmarkService.GetRemoveTime(new List<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[1])
+                {
+                    double seconds = BenchmarkService.GetRemoveTime(new HashSet<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[2])
+                {
+                    double seconds = BenchmarkService.GetRemoveTime(new LinkedList<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+                else if (type == _acceptableTypes[3])
+                {
+                    double seconds = BenchmarkService.GetRemoveTime(new SortedSet<int>(), _collesctionsService.ElementsCount);
+                    results[type] = seconds;
+                }
+            }
+
+            return Ok(results);
+        }
     }
 }
