@@ -9,6 +9,11 @@ namespace CollectionBenchmarkWebApi.Controllers
     {
         private ICollesctionsService _collesctionsService;
 
+        private readonly string[] _acceptableTypes = new string[]
+        {
+            "List", "Dictionary", "HashSet", "LinkedList", "SortedSet"
+        };
+
         public BenchmarkController(ICollesctionsService collesctionsService)
         {
             _collesctionsService = collesctionsService;
@@ -19,11 +24,28 @@ namespace CollectionBenchmarkWebApi.Controllers
         {
             return Ok(new
             {
-                Types = new[]
-                {
-                    "List", "Dictionary", "HashSet", "LinkedList", "SortedSet"
-                }
+                Types = _acceptableTypes
             });
+        }
+
+        [HttpPost("add")]
+        public IActionResult AddCollection([FromQuery] string type)
+        {
+            //если коллекция такого типа существует и она ещё не добавлена 
+            if (_acceptableTypes.Contains(type) && !_collesctionsService.Types.Contains(type))
+            {
+                _collesctionsService.Types.Add(type);
+                return Ok(new {message = $"Коллекция {type} добавлена успешно!"});
+            }
+            else if (!_acceptableTypes.Contains(type))
+            {
+                return BadRequest(new {Error = $"Коллекции {type} не существует в программе!"});
+            }
+            else
+            {
+                return BadRequest(new { Error = $"Коллекция {type} уже добавлена" });
+            }
+
         }
     }
 }
