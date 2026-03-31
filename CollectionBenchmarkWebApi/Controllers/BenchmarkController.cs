@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CollectionBenchmarkWebApi.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CollectionBenchmarkWebApi.Controllers
 {
@@ -6,6 +7,13 @@ namespace CollectionBenchmarkWebApi.Controllers
     [Route("api/[controller]")]
     public class BenchmarkController : ControllerBase
     {
+        private ICollesctionsService _collesctionsService;
+
+        public BenchmarkController(ICollesctionsService collesctionsService)
+        {
+            _collesctionsService = collesctionsService;
+        }
+
         [HttpGet("types")]
         public IActionResult Types()
         {
