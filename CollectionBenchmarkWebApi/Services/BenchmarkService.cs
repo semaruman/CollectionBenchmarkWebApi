@@ -26,10 +26,10 @@ namespace CollectionBenchmarkWebApi.Services
             //добавление элементов
             for (int i = 0; i < elemCount; i++)
             {
-                collection.Add(rnd.Next(100));
+                collection.Add(i);
             }
 
-            int findElem = rnd.Next(100);
+            int findElem = rnd.Next(elemCount);
 
             stopwatch.Start();
             collection.Contains(findElem);
@@ -53,7 +53,7 @@ namespace CollectionBenchmarkWebApi.Services
 
             long memoryAfter = GC.GetTotalMemory(true);
 
-            return (memoryAfter - memoryBefore)/1024.0;
+            return (memoryAfter - memoryBefore)/1024.0/1024.0;
         }
     }
 }
