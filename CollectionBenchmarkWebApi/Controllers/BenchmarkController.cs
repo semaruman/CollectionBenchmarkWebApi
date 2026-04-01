@@ -7,17 +7,10 @@ namespace CollectionBenchmarkWebApi.Controllers
     [Route("api/[controller]")]
     public class BenchmarkController : ControllerBase
     {
-        private ICollesctionsService _collesctionsService;
-
         private readonly string[] _acceptableTypes = new string[]
         {
             "List", "HashSet", "LinkedList", "SortedSet"
         };
-
-        public BenchmarkController(ICollesctionsService collesctionsService)
-        {
-            _collesctionsService = collesctionsService;
-        }
 
         [HttpGet("types")]
         public IActionResult Types()
