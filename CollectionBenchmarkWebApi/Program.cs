@@ -3,7 +3,7 @@ using CollectionBenchmarkWebApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ICollesctionsService, CollectionsService>();
+builder.Services.AddScoped<ICollesctionsService, CollectionsService>();
 
 var app = builder.Build();
 app.MapControllers();

@@ -92,7 +92,7 @@ namespace CollectionBenchmarkWebApi.Controllers
             {
                 elementsCount = Convert.ToInt32(Request.Cookies["count"]);
             }
-            Console.WriteLine(elementsCount);
+            
             if (_collesctionsService.Types.Count == 0)
             {
                 return BadRequest(new {Error = "Коллекии не добавлены"});
@@ -133,11 +133,17 @@ namespace CollectionBenchmarkWebApi.Controllers
         [HttpGet("search")]
         public IActionResult SearchBenchmarkTest()
         {
+            int elementsCount = 0;
+            if (Request.Cookies.ContainsKey("count"))
+            {
+                elementsCount = Convert.ToInt32(Request.Cookies["count"]);
+            }
+
             if (_collesctionsService.Types.Count == 0)
             {
                 return BadRequest(new { Error = "Коллекии не добавлены" });
             }
-            else if (_collesctionsService.ElementsCount == 0)
+            else if (elementsCount == 0)
             {
                 return BadRequest(new { Error = "Укажите количество элементов" });
             }
@@ -173,11 +179,17 @@ namespace CollectionBenchmarkWebApi.Controllers
         [HttpGet("memory")]
         public IActionResult MemoryBenchmarkTest()
         {
+            int elementsCount = 0;
+            if (Request.Cookies.ContainsKey("count"))
+            {
+                elementsCount = Convert.ToInt32(Request.Cookies["count"]);
+            }
+
             if (_collesctionsService.Types.Count == 0)
             {
                 return BadRequest(new { Error = "Коллекии не добавлены" });
             }
-            else if (_collesctionsService.ElementsCount == 0)
+            else if (elementsCount == 0)
             {
                 return BadRequest(new { Error = "Укажите количество элементов" });
             }
@@ -213,11 +225,17 @@ namespace CollectionBenchmarkWebApi.Controllers
         [HttpGet("remove")]
         public IActionResult RemoveBenchmarkTest()
         {
+            int elementsCount = 0;
+            if (Request.Cookies.ContainsKey("count"))
+            {
+                elementsCount = Convert.ToInt32(Request.Cookies["count"]);
+            }
+
             if (_collesctionsService.Types.Count == 0)
             {
                 return BadRequest(new { Error = "Коллекии не добавлены" });
             }
-            else if (_collesctionsService.ElementsCount == 0)
+            else if (elementsCount == 0)
             {
                 return BadRequest(new { Error = "Укажите количество элементов" });
             }
