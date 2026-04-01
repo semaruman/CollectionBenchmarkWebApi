@@ -61,11 +61,18 @@ namespace CollectionBenchmarkWebApi.Controllers
             {
                 return BadRequest(new { Error = "Значение не должно быть отрицательным" });
             }
+
+            if (Request.Cookies.ContainsKey("count"))
+            {
+                Response.Cookies.Delete("count");
+                Response.Cookies.Append("count", count.ToString());
+            }
             else
             {
-                _collesctionsService.ElementsCount = count;
-                return Ok(new {message = $"Теперь сравнение происходит по {count} элементам"});
+                Response.Cookies.Append("count", count.ToString());
             }
+
+            return Ok(new { message = $"Теперь сравнение происходит по {count} элементам" });
         }
 
         [HttpGet("selectedtypes")]
@@ -80,11 +87,17 @@ namespace CollectionBenchmarkWebApi.Controllers
         [HttpGet("add")]
         public IActionResult AddBenchmarkTest()
         {
+            int elementsCount = 0;
+            if (Request.Cookies.ContainsKey("count"))
+            {
+                elementsCount = Convert.ToInt32(Request.Cookies["count"]);
+            }
+            Console.WriteLine(elementsCount);
             if (_collesctionsService.Types.Count == 0)
             {
                 return BadRequest(new {Error = "Коллекии не добавлены"});
             }
-            else if (_collesctionsService.ElementsCount == 0)
+            else if (elementsCount == 0)
             {
                 return BadRequest(new { Error = "Укажите количество элементов" });
             }
