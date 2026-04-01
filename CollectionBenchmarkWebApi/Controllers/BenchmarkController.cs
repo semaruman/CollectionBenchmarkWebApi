@@ -31,10 +31,20 @@ namespace CollectionBenchmarkWebApi.Controllers
         [HttpPost("addcollection")]
         public IActionResult AddCollection([FromQuery] string type)
         {
-            //если коллекция такого типа существует и она ещё не добавлена 
-            if (_acceptableTypes.Contains(type) && !_collesctionsService.Types.Contains(type))
+            string types = "";
+            if (Request.Cookies.ContainsKey("types"))
             {
-                _collesctionsService.Types.Add(type);
+                types = Request.Cookies["types"];
+                Response.Cookies.Delete("types");
+            }
+
+            //если коллекция такого типа существует и она ещё не добавлена 
+            if (_acceptableTypes.Contains(type) && !types.Contains(type))
+            {
+                
+                types += type + ";";
+                Response.Cookies.Append("types", types);
+
                 return Ok(new {message = $"Коллекция {type} добавлена успешно!"});
             }
             else if (!_acceptableTypes.Contains(type))
@@ -78,9 +88,15 @@ namespace CollectionBenchmarkWebApi.Controllers
         [HttpGet("selectedtypes")]
         public IActionResult GetSelectedTypes()
         {
+            string[] types = new string[0];
+            if (Request.Cookies.ContainsKey("types"))
+            {
+                types = Request.Cookies["types"].Split(';', StringSplitOptions.RemoveEmptyEntries);
+            }
+
             return Ok(new
             {
-                Types = _collesctionsService.Types
+                Types = types
             });
         }
 
@@ -92,8 +108,14 @@ namespace CollectionBenchmarkWebApi.Controllers
             {
                 elementsCount = Convert.ToInt32(Request.Cookies["count"]);
             }
-            
-            if (_collesctionsService.Types.Count == 0)
+
+            string[] types = new string[0];
+            if (Request.Cookies.ContainsKey("types"))
+            {
+                types = Request.Cookies["types"].Split(';', StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            if (types.Length == 0)
             {
                 return BadRequest(new {Error = "Коллекии не добавлены"});
             }
@@ -103,26 +125,26 @@ namespace CollectionBenchmarkWebApi.Controllers
             }
 
             Dictionary<string, double> results = new Dictionary<string, double>();
-            foreach (string type in _collesctionsService.Types)
+            foreach (string type in types)
             {
                 if (type == _acceptableTypes[0])
                 {
-                    double seconds = BenchmarkService.GetAddTime(new List<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetAddTime(new List<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[1])
                 {
-                    double seconds = BenchmarkService.GetAddTime(new HashSet<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetAddTime(new HashSet<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[2])
                 {
-                    double seconds = BenchmarkService.GetAddTime(new LinkedList<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetAddTime(new LinkedList<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[3])
                 {
-                    double seconds = BenchmarkService.GetAddTime(new SortedSet<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetAddTime(new SortedSet<int>(), elementsCount);
                     results[type] = seconds;
                 }
             }
@@ -139,7 +161,13 @@ namespace CollectionBenchmarkWebApi.Controllers
                 elementsCount = Convert.ToInt32(Request.Cookies["count"]);
             }
 
-            if (_collesctionsService.Types.Count == 0)
+            string[] types = new string[0];
+            if (Request.Cookies.ContainsKey("types"))
+            {
+                types = Request.Cookies["types"].Split(';', StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            if (types.Length == 0)
             {
                 return BadRequest(new { Error = "Коллекии не добавлены" });
             }
@@ -149,26 +177,26 @@ namespace CollectionBenchmarkWebApi.Controllers
             }
 
             Dictionary<string, double> results = new Dictionary<string, double>();
-            foreach (string type in _collesctionsService.Types)
+            foreach (string type in types)
             {
                 if (type == _acceptableTypes[0])
                 {
-                    double seconds = BenchmarkService.GetSearchTime(new List<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetSearchTime(new List<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[1])
                 {
-                    double seconds = BenchmarkService.GetSearchTime(new HashSet<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetSearchTime(new HashSet<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[2])
                 {
-                    double seconds = BenchmarkService.GetSearchTime(new LinkedList<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetSearchTime(new LinkedList<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[3])
                 {
-                    double seconds = BenchmarkService.GetSearchTime(new SortedSet<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetSearchTime(new SortedSet<int>(), elementsCount);
                     results[type] = seconds;
                 }
             }
@@ -185,7 +213,13 @@ namespace CollectionBenchmarkWebApi.Controllers
                 elementsCount = Convert.ToInt32(Request.Cookies["count"]);
             }
 
-            if (_collesctionsService.Types.Count == 0)
+            string[] types = new string[0];
+            if (Request.Cookies.ContainsKey("types"))
+            {
+                types = Request.Cookies["types"].Split(';', StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            if (types.Length == 0)
             {
                 return BadRequest(new { Error = "Коллекии не добавлены" });
             }
@@ -195,27 +229,27 @@ namespace CollectionBenchmarkWebApi.Controllers
             }
 
             Dictionary<string, double> results = new Dictionary<string, double>();
-            foreach (string type in _collesctionsService.Types)
+            foreach (string type in types)
             {
                 if (type == _acceptableTypes[0])
                 {
-                    double seconds = BenchmarkService.GetCollectionMemory(new List<int>(), _collesctionsService.ElementsCount);
-                    results[type] = seconds;
+                    double mbytes = BenchmarkService.GetCollectionMemory(new List<int>(), elementsCount);
+                    results[type] = mbytes;
                 }
                 else if (type == _acceptableTypes[1])
                 {
-                    double seconds = BenchmarkService.GetCollectionMemory(new HashSet<int>(), _collesctionsService.ElementsCount);
-                    results[type] = seconds;
+                    double mbytes = BenchmarkService.GetCollectionMemory(new HashSet<int>(), elementsCount);
+                    results[type] = mbytes;
                 }
                 else if (type == _acceptableTypes[2])
                 {
-                    double seconds = BenchmarkService.GetCollectionMemory(new LinkedList<int>(), _collesctionsService.ElementsCount);
-                    results[type] = seconds;
+                    double mbytes = BenchmarkService.GetCollectionMemory(new LinkedList<int>(), elementsCount);
+                    results[type] = mbytes;
                 }
                 else if (type == _acceptableTypes[3])
                 {
-                    double seconds = BenchmarkService.GetCollectionMemory(new SortedSet<int>(), _collesctionsService.ElementsCount);
-                    results[type] = seconds;
+                    double mbytes = BenchmarkService.GetCollectionMemory(new SortedSet<int>(), elementsCount);
+                    results[type] = mbytes;
                 }
             }
 
@@ -231,7 +265,13 @@ namespace CollectionBenchmarkWebApi.Controllers
                 elementsCount = Convert.ToInt32(Request.Cookies["count"]);
             }
 
-            if (_collesctionsService.Types.Count == 0)
+            string[] types = new string[0];
+            if (Request.Cookies.ContainsKey("types"))
+            {
+                types = Request.Cookies["types"].Split(';', StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            if (types.Length == 0)
             {
                 return BadRequest(new { Error = "Коллекии не добавлены" });
             }
@@ -241,26 +281,26 @@ namespace CollectionBenchmarkWebApi.Controllers
             }
 
             Dictionary<string, double> results = new Dictionary<string, double>();
-            foreach (string type in _collesctionsService.Types)
+            foreach (string type in types)
             {
                 if (type == _acceptableTypes[0])
                 {
-                    double seconds = BenchmarkService.GetRemoveTime(new List<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetRemoveTime(new List<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[1])
                 {
-                    double seconds = BenchmarkService.GetRemoveTime(new HashSet<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetRemoveTime(new HashSet<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[2])
                 {
-                    double seconds = BenchmarkService.GetRemoveTime(new LinkedList<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetRemoveTime(new LinkedList<int>(), elementsCount);
                     results[type] = seconds;
                 }
                 else if (type == _acceptableTypes[3])
                 {
-                    double seconds = BenchmarkService.GetRemoveTime(new SortedSet<int>(), _collesctionsService.ElementsCount);
+                    double seconds = BenchmarkService.GetRemoveTime(new SortedSet<int>(), elementsCount);
                     results[type] = seconds;
                 }
             }
